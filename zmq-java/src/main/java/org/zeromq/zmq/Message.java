@@ -9,10 +9,15 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 
-public class ZMessage implements Collection<ZFrame> {
-  private final Deque<ZFrame> frames;
+public class Message implements Collection<Frame> {
+  private final Deque<Frame> frames;
+
+  public Message() {
+    frames = new ArrayDeque<Frame>();
+  }
 
   /**
    * Constructs a ZMessge containing the elements of the specified collection, in the order they are
@@ -21,15 +26,23 @@ public class ZMessage implements Collection<ZFrame> {
    * 
    * @param c the collection whose elements are to be placed into the {@code ZMessage}
    */
-  public ZMessage(Collection<? extends ZFrame> c) {
-    frames = new ArrayDeque<ZFrame>(c);
+  public Message(Collection<? extends Frame> c) {
+    frames = new ArrayDeque<Frame>(c);
+  }
+
+  public Frame pop() {
+    try {
+      return frames.pop();
+    } catch (NoSuchElementException e) {
+    }
+    return null;
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public Iterator<ZFrame> iterator() {
+  public Iterator<Frame> iterator() {
     return frames.iterator();
   }
 
@@ -59,7 +72,7 @@ public class ZMessage implements Collection<ZFrame> {
   }
 
   @Override
-  public boolean add(ZFrame e) {
+  public boolean add(Frame e) {
     return frames.add(e);
   }
 
@@ -74,7 +87,7 @@ public class ZMessage implements Collection<ZFrame> {
   }
 
   @Override
-  public boolean addAll(Collection<? extends ZFrame> c) {
+  public boolean addAll(Collection<? extends Frame> c) {
     return frames.addAll(c);
   }
 
@@ -94,7 +107,7 @@ public class ZMessage implements Collection<ZFrame> {
   }
 
   public void send(Socket socket) {
-    for (ZFrame frame : this) {
+    for (Frame frame : this) {
       // frame.send(socket);
     }
   }

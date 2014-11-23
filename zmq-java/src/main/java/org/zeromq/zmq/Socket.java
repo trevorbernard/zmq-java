@@ -5,6 +5,7 @@
 
 package org.zeromq.zmq;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -126,6 +127,36 @@ public class Socket implements AutoCloseable {
     }
     mayRaise();
     return -1;
+  }
+
+  /**
+   * Send a frame
+   * 
+   * @param frame
+   * @param flags
+   * @return return true if successful
+   */
+  public boolean sendFrame(Frame frame, int flags) {
+    final ByteBuffer bb = frame.byteBuffer;
+    final Msg msg = new Msg(bb);
+    if (socketBase.send(msg, flags)) {
+      return true;
+    }
+    mayRaise();
+    return false;
+  }
+
+  public boolean sendMessage(Message message) {
+    Frame frame = message.pop();
+    boolean rc = false;
+    while (frame != null) {
+      rc = sendFrame(frame, message.size() > 0 ? ZMQ.ZMQ_MORE : 0);
+      if (!rc) {
+        break;
+      }
+      frame = message.pop();
+    }
+    return rc;
   }
 
   public int sendStringUtf8(String str) {

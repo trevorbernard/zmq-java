@@ -15,12 +15,13 @@ import java.nio.ByteOrder;
  * indicates if the frame is part of an unfinished multipart message.
  * </p>
  */
-public class ZFrame {
+public class Frame {
   private static final ByteOrder BYTE_ORDER = ByteOrder.BIG_ENDIAN;
-  private ByteBuffer byteBuffer;
   private boolean hasMore;
 
-  public ZFrame() {
+  ByteBuffer byteBuffer;
+
+  public Frame() {
     this(0);
   }
 
@@ -29,7 +30,7 @@ public class ZFrame {
    * 
    * @param size the size
    */
-  public ZFrame(int size) {
+  public Frame(int size) {
     byteBuffer = ByteBuffer.allocate(size).order(BYTE_ORDER);
   }
 
@@ -69,6 +70,11 @@ public class ZFrame {
     return byteBuffer.getLong(index);
   }
 
+  public Frame putLong(final int index, final long value) {
+    byteBuffer.putLong(index, value);
+    return this;
+  }
+
   /**
    * Reads an {@code int} at the given index
    * 
@@ -79,6 +85,11 @@ public class ZFrame {
    */
   public int getInt(final int index) {
     return byteBuffer.getInt(index);
+  }
+
+  public Frame putInt(final int index, final int value) {
+    byteBuffer.putInt(index, value);
+    return this;
   }
 
   /**
@@ -93,6 +104,11 @@ public class ZFrame {
     return byteBuffer.getShort(index);
   }
 
+  public Frame putShort(final int index, final short value) {
+    byteBuffer.putShort(index, value);
+    return this;
+  }
+
   /**
    * Reads a {@code double} at the given index
    * 
@@ -103,6 +119,11 @@ public class ZFrame {
    */
   public double getDouble(final int index) {
     return byteBuffer.getDouble(index);
+  }
+
+  public Frame putDouble(final int index, final double value) {
+    byteBuffer.putDouble(index, value);
+    return this;
   }
 
   /**
@@ -117,8 +138,28 @@ public class ZFrame {
     return byteBuffer.getFloat(index);
   }
 
+  public Frame putFloat(final int index, final float value) {
+    byteBuffer.putFloat(index, value);
+    return this;
+  }
+
   public int getBytes(final int index, byte[] dst) {
     return getBytes(index, dst, 0, dst.length);
+  }
+
+  public Frame putBytes(final int index, byte[] src) {
+    return putBytes(index, src, 0, src.length);
+  }
+
+  public Frame putBytes(final int index, byte[] src, int off, int len) {
+    final int lastPosition = byteBuffer.position();
+    try {
+      byteBuffer.position(index);
+      byteBuffer.put(src, off, len);
+    } finally {
+      byteBuffer.position(lastPosition);
+    }
+    return this;
   }
 
   public int getBytes(final int index, byte[] dst, int off, int len) {
@@ -130,6 +171,19 @@ public class ZFrame {
     } finally {
       byteBuffer.position(lastPosition);
     }
+  }
+
+  public String getStringUtf8(final int index, final int length) {
+    byte[] dst = new byte[length];
+    getBytes(index, dst, 0, length);
+    return new String(dst, Socket.UTF8);
+  }
+
+
+  public Frame putStringUtf8(final int index, String str) {
+    byte[] b = str.getBytes(Socket.UTF8);
+    putBytes(index, b);
+    return this;
   }
 
   /**
@@ -158,7 +212,7 @@ public class ZFrame {
     if (getClass() != obj.getClass()) {
       return false;
     }
-    ZFrame other = (ZFrame) obj;
+    Frame other = (Frame) obj;
     if (byteBuffer == null) {
       if (other.byteBuffer != null) {
         return false;
