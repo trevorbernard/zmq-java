@@ -41,8 +41,11 @@ class ManagedContext {
   }
 
   void destroy(SocketBase socketBase) {
-    socketBase.setSocketOpt(ZMQ.ZMQ_LINGER, 0);
-    socketBase.close();
+    try {
+      socketBase.setSocketOpt(ZMQ.ZMQ_LINGER, 0);
+      socketBase.close();
+    } catch (Exception e) {
+    }
     lock.lock();
     try {
       sockets.remove(socketBase);
