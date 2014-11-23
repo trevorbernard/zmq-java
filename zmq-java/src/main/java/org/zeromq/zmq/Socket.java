@@ -42,7 +42,17 @@ public class Socket implements AutoCloseable {
   }
 
   /**
-   * Creates an endpoint for accepting connections and binds to it
+   * Retrieve the socket type for the specified 'socket'. The socket type is specified at socket
+   * creation time and cannot be modified afterwards.
+   *
+   * @return the socket type.
+   */
+  public int getType() {
+    return socketBase.getSocketOpt(ZMQ.ZMQ_TYPE);
+  }
+
+  /**
+   * Creates an endpoint for accepting connections and binds to it.
    * <p>
    * The endpoint argument is a string consisting of two parts as follows: transport ://address. The
    * transport part specifies the underlying transport protocol to use. The meaning of the address
