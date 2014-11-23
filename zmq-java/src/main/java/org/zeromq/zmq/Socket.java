@@ -38,7 +38,7 @@ public class Socket implements AutoCloseable {
    * @param socketType ZeroMQ socket type
    */
   public Socket(final int socketType) {
-    this.socketBase = ManagedContext.getInstance().createSocket(socketType);
+    socketBase = ManagedContext.getInstance().createSocket(socketType);
   }
 
   /**
@@ -48,7 +48,7 @@ public class Socket implements AutoCloseable {
    * @return the socket type.
    */
   public int getType() {
-    return socketBase.getSocketOpt(ZMQ.ZMQ_TYPE);
+    return (int) getOption(ZMQ.ZMQ_TYPE);
   }
 
   /**
@@ -115,7 +115,7 @@ public class Socket implements AutoCloseable {
    * @return true if there are more messages to receive.
    */
   public final boolean hasReceiveMore() {
-    return socketBase.getSocketOpt(ZMQ.ZMQ_RCVMORE) == 1;
+    return (int) getOption(ZMQ.ZMQ_RCVMORE) == 1;
   }
 
   public void subscribe(byte[] topic) {
@@ -160,7 +160,7 @@ public class Socket implements AutoCloseable {
     Frame frame = message.pop();
     boolean rc = false;
     while (frame != null) {
-      rc = sendFrame(frame, message.size() > 0 ? ZMQ.ZMQ_MORE : 0);
+      rc = sendFrame(frame, !message.isEmpty() ? ZMQ.ZMQ_MORE : 0);
       if (!rc) {
         break;
       }
@@ -203,15 +203,15 @@ public class Socket implements AutoCloseable {
     }
   }
 
-  void setOption(int option, Object value) {
+  private void setOption(int option, Object value) {
     try {
       socketBase.setSocketOpt(option, value);
     } catch (ZMQException e) {
     }
   }
 
-  Object getOption(int option) {
-    return socketBase.getSocketOpt(option);
+  private Object getOption(int option) {
+    return socketBase.getsockoptx(option);
   }
 
   /**
