@@ -42,10 +42,10 @@ public class Socket implements AutoCloseable {
   }
 
   /**
-   * Retrieve the socket type for the specified 'socket'. The socket type is specified at socket
+   * Retrieve the socket type for the current 'socket'. The socket type is specified at socket
    * creation time and cannot be modified afterwards.
    *
-   * @return the socket type.
+   * @return the socket's type.
    */
   public int getType() {
     return (int) getOption(ZMQ.ZMQ_TYPE);
@@ -69,7 +69,7 @@ public class Socket implements AutoCloseable {
   }
 
   /**
-   * Stop accepting connections on a socket
+   * Stop accepting connections on a socket.
    * <p>
    * Shall unbind from the endpoint specified by the endpoint argument.
    * </p>
@@ -100,6 +100,12 @@ public class Socket implements AutoCloseable {
     return result;
   }
 
+  /**
+   * Disconnecting a socket from an endpoint.
+   * 
+   * @param endpoint the endpoint to disconnect from
+   * @return returns true if disconnecting to endpoint was successful
+   */
   public boolean disconnect(final String endpoint) {
     final boolean result = socketBase.termEndpoint(endpoint);
     mayRaise();
