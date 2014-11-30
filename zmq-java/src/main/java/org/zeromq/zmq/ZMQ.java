@@ -1,6 +1,5 @@
 package org.zeromq.zmq;
 
-import java.nio.charset.Charset;
 
 public class ZMQ {
   /* Version macros for compile-time API version detection */
@@ -116,15 +115,16 @@ public class ZMQ {
   public static final int ZMQ_POLLOUT = 2;
   public static final int ZMQ_POLLERR = 4;
 
+  @Deprecated
   public static final int ZMQ_STREAMER = 1;
+  @Deprecated
   public static final int ZMQ_FORWARDER = 2;
+  @Deprecated
   public static final int ZMQ_QUEUE = 3;
 
-  public static final byte[] MESSAGE_SEPARATOR = new byte[0];
+  public static final byte[] MESSAGE_SEPARATOR = {};
 
-  public static final byte[] SUBSCRIPTION_ALL = new byte[0];
-
-  public static final Charset CHARSET = Charset.forName("UTF-8");
+  public static final byte[] SUBSCRIPTION_ALL = {};
 
   private ZMQ() {}
 
