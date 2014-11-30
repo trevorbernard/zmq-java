@@ -11,26 +11,37 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * Working with multipart messages.
+ * <p>
+ * This class provides a list-like container interface, with methods to work with the overall
+ * container. Messages are composed of zero or more Frames.
+ * </p>
+ */
+public class ZMessage implements Collection<ZFrame> {
+  private final Deque<ZFrame> frames;
 
-public class Message implements Collection<Frame> {
-  private final Deque<Frame> frames;
-
-  public Message() {
-    frames = new ArrayDeque<Frame>();
+  public ZMessage() {
+    frames = new ArrayDeque<ZFrame>();
   }
 
   /**
-   * Constructs a ZMessge containing the elements of the specified collection, in the order they are
+   * Constructs a Message containing the elements of the specified collection, in the order they are
    * returned by the collection's iterator. (The first element returned by the collection's iterator
-   * becomes the first element, or <i>front</i> of the ZMessage.)
+   * becomes the first element, or <i>front</i> of the Message.)
    * 
    * @param c the collection whose elements are to be placed into the {@code ZMessage}
    */
-  public Message(Collection<? extends Frame> c) {
-    frames = new ArrayDeque<Frame>(c);
+  public ZMessage(Collection<? extends ZFrame> c) {
+    frames = new ArrayDeque<ZFrame>(c);
   }
 
-  public Frame pop() {
+  /**
+   * Removes and returns the first Frame in this Message
+   * 
+   * @return first frame
+   */
+  public ZFrame pop() {
     try {
       return frames.pop();
     } catch (NoSuchElementException e) {
@@ -42,7 +53,7 @@ public class Message implements Collection<Frame> {
    * {@inheritDoc}
    */
   @Override
-  public Iterator<Frame> iterator() {
+  public Iterator<ZFrame> iterator() {
     return frames.iterator();
   }
 
@@ -72,7 +83,7 @@ public class Message implements Collection<Frame> {
   }
 
   @Override
-  public boolean add(Frame e) {
+  public boolean add(ZFrame e) {
     return frames.add(e);
   }
 
@@ -87,7 +98,7 @@ public class Message implements Collection<Frame> {
   }
 
   @Override
-  public boolean addAll(Collection<? extends Frame> c) {
+  public boolean addAll(Collection<? extends ZFrame> c) {
     return frames.addAll(c);
   }
 
@@ -104,11 +115,5 @@ public class Message implements Collection<Frame> {
   @Override
   public void clear() {
     frames.clear();
-  }
-
-  public void send(Socket socket) {
-    for (Frame frame : this) {
-      // frame.send(socket);
-    }
   }
 }

@@ -26,7 +26,7 @@ import zmq.ZMQ;
  * itself. Further, messages may be queued in the event that a peer is unavailable to receive them.
  * </p>
  */
-public class Socket implements AutoCloseable {
+public class ZSocket implements AutoCloseable {
   public static final Charset UTF8 = Charset.forName("UTF-8");
   private final SocketBase socketBase;
 
@@ -37,7 +37,7 @@ public class Socket implements AutoCloseable {
    * 
    * @param socketType ZeroMQ socket type
    */
-  public Socket(final int socketType) {
+  public ZSocket(final int socketType) {
     socketBase = ManagedContext.getInstance().createSocket(socketType);
   }
 
@@ -152,7 +152,7 @@ public class Socket implements AutoCloseable {
    * @param flags
    * @return return true if successful
    */
-  public boolean sendFrame(Frame frame, int flags) {
+  public boolean sendFrame(ZFrame frame, int flags) {
     final ByteBuffer bb = frame.byteBuffer;
     final Msg msg = new Msg(bb);
     if (socketBase.send(msg, flags)) {
@@ -162,8 +162,8 @@ public class Socket implements AutoCloseable {
     return false;
   }
 
-  public boolean sendMessage(Message message) {
-    Frame frame = message.pop();
+  public boolean sendMessage(ZMessage message) {
+    ZFrame frame = message.pop();
     boolean rc = false;
     while (frame != null) {
       rc = sendFrame(frame, !message.isEmpty() ? ZMQ.ZMQ_MORE : 0);

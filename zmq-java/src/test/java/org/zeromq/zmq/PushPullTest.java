@@ -9,8 +9,8 @@ import org.junit.Test;
 public class PushPullTest {
   @Test
   public void testSimplePushPull() {
-    try (final Socket pull = new Socket(ZMQ_PULL);
-         final Socket push = new Socket(ZMQ_PUSH)) {
+    try (final ZSocket pull = new ZSocket(ZMQ_PULL);
+         final ZSocket push = new ZSocket(ZMQ_PUSH)) {
       pull.bind("tcp://*:7210");
       push.connect("tcp://127.0.0.1:7210");
 
