@@ -14,22 +14,19 @@ import zmq.Ctx;
 import zmq.SocketBase;
 import zmq.ZMQ;
 
-// No class access modifier is used so ManagedContext is only visible to itself and it's namespace.
 // This is to avoid people trying to initialize a Context
-class ManagedContext {
-  private static final int DEFAULT_IO_THREADS = 1;
-
+class ManagedContext { // private-package
   private final Lock lock;
   private final Ctx ctx;
   private final Set<SocketBase> sockets;
 
   private ManagedContext() {
-    this.ctx = zmq.ZMQ.zmqInit(DEFAULT_IO_THREADS);
+    this.ctx = ZMQ.zmqInit(ZMQ.ZMQ_IO_THREADS_DFLT);
     this.lock = new ReentrantLock();
     this.sockets = new HashSet<SocketBase>();
   }
 
-  SocketBase createSocket(int type) {
+  SocketBase createSocket(int type) { // private-package
     final SocketBase base = ctx.createSocket(type);
     lock.lock();
     try {
@@ -40,7 +37,7 @@ class ManagedContext {
     return base;
   }
 
-  void destroy(SocketBase socketBase) {
+  void destroy(SocketBase socketBase) { // private-package
     try {
       socketBase.setSocketOpt(ZMQ.ZMQ_LINGER, 0);
       socketBase.close();
@@ -59,7 +56,7 @@ class ManagedContext {
     private static final ManagedContext INSTANCE = new ManagedContext();
   }
 
-  static ManagedContext getInstance() {
+  static ManagedContext getInstance() { // private-package
     return ContextHolder.INSTANCE;
   }
 

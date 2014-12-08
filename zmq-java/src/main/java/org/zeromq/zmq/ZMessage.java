@@ -5,6 +5,7 @@
 
 package org.zeromq.zmq;
 
+import java.awt.Frame;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
@@ -47,6 +48,14 @@ public class ZMessage implements Collection<ZFrame> {
     } catch (NoSuchElementException e) {
     }
     return null;
+  }
+
+  public long contentSize() {
+    int size = 0;
+    for (ZFrame f : frames) {
+      // size += f.size();
+    }
+    return size;
   }
 
   /**
