@@ -8,7 +8,7 @@ YourKit is kindly supporting ZeroMQ project with its full-featured [Java Profile
 
 ## License
 
-Copyright © 2014 Trevor Bernard
+Copyright © 2014-2015 Trevor Bernard
 
 This software is licensed under the [MPL] 2.0:
 
