@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.zeromq</groupId>
   <artifactId>zmq-java</artifactId>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
   <version>0.1.0-SNAPSHOT</version>
   <name>zmq-java</name>
 
