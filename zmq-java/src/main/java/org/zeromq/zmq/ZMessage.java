@@ -5,7 +5,6 @@
 
 package org.zeromq.zmq;
 
-import java.awt.Frame;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
@@ -22,6 +21,9 @@ import java.util.NoSuchElementException;
 public class ZMessage implements Collection<ZFrame> {
   private final Deque<ZFrame> frames;
 
+  /**
+   * Constructs and empty message
+   */
   public ZMessage() {
     frames = new ArrayDeque<ZFrame>();
   }
