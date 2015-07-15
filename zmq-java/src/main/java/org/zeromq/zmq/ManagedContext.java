@@ -21,7 +21,7 @@ class ManagedContext { // private-package
   private final Set<SocketBase> sockets;
 
   private ManagedContext() {
-    this.ctx = ZMQ.zmqInit(ZMQ.ZMQ_IO_THREADS_DFLT);
+    this.ctx = ZMQ.init(ZMQ.ZMQ_IO_THREADS_DFLT);
     this.lock = new ReentrantLock();
     this.sockets = new HashSet<SocketBase>();
   }
